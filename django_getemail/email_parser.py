@@ -36,12 +36,10 @@ class EmailParser(object):
             return filename, file_data
 
     def get_attachments(self):
-        raw_files = []
         for part in self.email.walk():
             attachment = self._process_attachements(message_part=part)
             if attachment:
-                raw_files.append(attachment)
-        return raw_files
+                yield attachment
 
     @staticmethod
     def _find_email(str_):

@@ -64,4 +64,5 @@ class Settings(object):
     def EXCHANGE_NAME(self):
         return CONFIG.get('EXCHANGE_NAME')
 
+
 conf = Settings()

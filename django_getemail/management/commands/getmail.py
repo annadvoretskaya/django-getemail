@@ -19,7 +19,8 @@ class Command(BaseCommand):
     @staticmethod
     def _get_search_query(latest_uid):
         if settings.DEBUG:
-            week_ago_str = (datetime.now() - timedelta(days=conf.FETCH_FOR_DAYS)).strftime('%d-%b-%Y')
+            now = datetime.now()
+            week_ago_str = (now - timedelta(days=conf.FETCH_FOR_DAYS)).strftime('%d-%b-%Y')
             time_filter = 'SINCE "{}"'.format(week_ago_str)
         else:
             time_filter = ''
@@ -50,7 +51,9 @@ class Command(BaseCommand):
             label_filter = 'label:{}'.format(conf.FILTERING_LABEL)
 
             try:
-                new_email_uids = self.gmail_client.search_email_uids(search_query, label_filter=label_filter)
+                new_email_uids = self.gmail_client.search_email_uids(
+                    search_query, label_filter=label_filter
+                )
             except EmailClientException as exc:
                 self.stdout.write(search_query)
                 raise exc

@@ -1,6 +1,7 @@
 import imaplib
 
-from django_getemail.email_client.exceptions import EmailClientException, ReadOnlyEmailClientException
+from django_getemail.email_client.exceptions import EmailClientException, \
+    ReadOnlyEmailClientException
 
 
 class BaseEmailClient(object):
@@ -47,7 +48,7 @@ class BaseEmailClient(object):
         try:
             result, uids = self._find_emails_uids(search_query, *args, **kwargs)
         except imaplib.IMAP4_SSL.abort as exc:
-            self._mail = None  # need refactoring
+            self._mail = None
             self.connect()
             result, uids = self._find_emails_uids(search_query, *args, **kwargs)
         except imaplib.IMAP4_SSL.error as exc:

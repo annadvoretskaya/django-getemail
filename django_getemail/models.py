@@ -4,7 +4,7 @@ from django.core.files import File
 from django.db import models
 
 from django_getemail.signals import email_imported
-from .email_parser import EmailParser
+from django_getemail.email_parser import EmailParser, EmailParserException
 
 
 def upload_to(instance, filename):
@@ -51,6 +51,7 @@ class Email(models.Model):
 
     def process(self, parse_attachments=True):
         parser = EmailParser(self.raw_email)
+
         try:
             self.sender = parser.get_from()
             self.subject = parser.get_subject()
@@ -62,8 +63,7 @@ class Email(models.Model):
 
             self.status = self.PROCESSED
             self.save()
-        except Exception as exc:  # Add EmailParser exceptions
-            print(exc)
+        except EmailParserException:
             self.fail_processing()
 
     def send_imported_email_signal(self):
